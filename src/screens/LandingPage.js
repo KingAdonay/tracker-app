@@ -11,7 +11,7 @@ class LandingPage extends Component {
 
         return (
             <View style={styles.centeredView}>
-                <Text style={styles.text}>ADDIS TRACKER</Text>
+                <Text style={styles.text}>HayTRACKER</Text>
                 <View>
                     <Image source={require('../../assets/logo.jpg')} style={styles.image} />
                 </View>

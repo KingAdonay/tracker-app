@@ -5,7 +5,7 @@ import MapView, { Polyline, Marker } from 'react-native-maps';
 import { connect } from 'react-redux';
 import { fetchWithQuery } from '../actions';
 import { NavigationEvents } from "react-navigation";
-import {  getPreciseDistance } from 'geolib';
+import { getPreciseDistance } from 'geolib';
 
 class RecentTrip extends Component {
 
@@ -26,14 +26,14 @@ class RecentTrip extends Component {
             topSpeed = locationsLocal.reduce((prev, current) => (prev.coords.speed > current.coords.speed) ? prev : current)
             let sum = 0;
             locationsLocal.map(loc => {
-              sum += loc.coords.speed;
+                sum += loc.coords.speed;
             });
-      
+
             averageSpeed = sum / locationsLocal.length;
             distance = getPreciseDistance(
-              { latitude: locationsLocal[0].coords.latitude, longitude: locationsLocal[0].coords.longitude },
-              { latitude: locationsLocal[locationsLocal.length - 1].coords.latitude, longitude: locationsLocal[locationsLocal.length - 1].coords.longitude },
-              locationsLocal[0].coords.accuracy
+                { latitude: locationsLocal[0].coords.latitude, longitude: locationsLocal[0].coords.longitude },
+                { latitude: locationsLocal[locationsLocal.length - 1].coords.latitude, longitude: locationsLocal[locationsLocal.length - 1].coords.longitude },
+                locationsLocal[0].coords.accuracy
             );
         } else {
             locationsLocal = [{
@@ -64,14 +64,14 @@ class RecentTrip extends Component {
             topSpeed = locationsLocal.reduce((prev, current) => (prev.coords.speed > current.coords.speed) ? prev : current)
             let sum = 0;
             locationsLocal.map(loc => {
-              sum += loc.coords.speed;
+                sum += loc.coords.speed;
             });
-      
+
             averageSpeed = sum / locationsLocal.length;
             distance = getPreciseDistance(
-              { latitude: locationsLocal[0].coords.latitude, longitude: locationsLocal[0].coords.longitude },
-              { latitude: locationsLocal[locationsLocal.length - 1].coords.latitude, longitude: locationsLocal[locationsLocal.length - 1].coords.longitude },
-              locationsLocal[0].coords.accuracy
+                { latitude: locationsLocal[0].coords.latitude, longitude: locationsLocal[0].coords.longitude },
+                { latitude: locationsLocal[locationsLocal.length - 1].coords.latitude, longitude: locationsLocal[locationsLocal.length - 1].coords.longitude },
+                locationsLocal[0].coords.accuracy
             );
         }
 
@@ -91,26 +91,25 @@ class RecentTrip extends Component {
                                 style={styles.map}
                             >
                                 <Polyline coordinates={locationsLocal.map(loc => loc.coords)}
-                                    strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
-                                    strokeColors={[
-                                        '#7F0000',
-                                        '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
-                                        '#B24112',
-                                        '#E5845C',
-                                        '#238C23',
-                                        '#7F0000'
-                                    ]}
+                                    strokeColor="rgba(24, 173, 24, 0.8)" // fallback for when `strokeColors` is not supported by the map-provider
+                                    
                                     strokeWidth={6}
                                 />
                                 <Marker coordinate={locationsLocal[0].coords} pinColor="green" />
                                 <Marker coordinate={locationsLocal[locationsLocal.length - 1].coords} pinColor='red' />
                             </MapView>
                             <ScrollView contentContainerStyle={styles.detailsContainer}>
-                                 {/* <Text style={{ fontSize: 30, textAlign: 'center', marginVertical: 10, fontWeight: 'bold' }}>{locationsLocal.title}</Text> */}
+                                {/* <Text style={{ fontSize: 30, textAlign: 'center', marginVertical: 10, fontWeight: 'bold' }}>{locationsLocal.title}</Text> */}
 
-                                <Text style={{ fontSize: 20,  marginBottom: 5 }}>Top speed: {topSpeed>0?topSpeed.toFixed(3): 0}km/hr</Text>
-                                <Text style={{ fontSize: 20,  marginBottom: 5 }}>AverageSpeed: {averageSpeed>0?averageSpeed.toFixed(3): 0} km/hr</Text>
-                                <Text style={{ fontSize: 20,  marginBottom: 5 }}>Estimated Distance: {distance} KM</Text>
+                                {
+                                    topSpeed<30?(
+                                        <Text style={styles.speedNormal}>Top speed: {topSpeed > 0 ? topSpeed.toFixed(3) : 0}km/hr</Text>
+                                    ): (
+                                        <Text style={styles.speedWarning}>Top speed: {topSpeed > 0 ? topSpeed.toFixed(3) : 0}km/hr</Text>
+                                    )
+                                }
+                                <Text style={{ fontSize: 20, marginBottom: 5 }}>AverageSpeed: {averageSpeed > 0 ? averageSpeed.toFixed(3) : 0} km/hr</Text>
+                                <Text style={{ fontSize: 20, marginBottom: 5 }}>Estimated Distance: {distance} KM</Text>
                             </ScrollView>
                         </View>
                     ) : (
@@ -128,7 +127,7 @@ class RecentTrip extends Component {
 
 const styles = StyleSheet.create({
     map: {
-        height: 550,
+        height: 500,
     },
     container: {
         flex: 1,
@@ -145,11 +144,13 @@ const styles = StyleSheet.create({
         fontSize: 20,
         alignSelf: 'center'
     },
-    detailsContainer:{
-        alignItems:'center',
-        textAlign:'center',
+    detailsContainer: {
+        alignItems: 'center',
+        textAlign: 'center',
         marginTop: 20
-    }
+    }, 
+    speedNormal: { fontSize: 20, marginBottom: 5, color:'black' },
+    speedWarning:  { fontSize: 20, marginBottom: 5, color:'orange' }
 });
 
 const mapStateToProps = state => {

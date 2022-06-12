@@ -181,7 +181,7 @@ class Vehicles extends Component {
                                             <ListItem style={{
                                                 marginTop: 10, marginHorizontal:5,
                                                borderBottomWidth: 2,
-                                               borderBottomColor: 'rgba(213, 237, 255, 0.8)',
+                                               borderBottomColor: 'rgba(137, 172, 193, 0.8)',
                                                borderRadius:2
                                             }}>
                                                 <ListItem.Content>

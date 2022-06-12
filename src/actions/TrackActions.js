@@ -68,11 +68,56 @@ export const createVehicle = (name, type, driver, plateNumber, secretNumber) => 
         }
 
         const db = getDatabase();
-        console.log(currentUser);
+
+        const referenceTracks = ref(db, `tracker/`);
+        let tracks = [];
+        await get(referenceTracks).then((snapshot) => {
+            if (snapshot.exists()) {
+                console.log('On fetch first', snapshot.val());
+                snapshot.forEach((childSnapShot) => {
+                    tracks.push({
+                        usersId: childSnapShot.key,
+                        data: childSnapShot.val()
+                    });
+                    dispatch({ type: 'fetch_track', payload: tracks });
+                })
+                if (!tracks.length) {
+                    setTimeout(() => console.log('hello there'), 5000);
+                }
+            } else {
+                alert("No vehicle data available!");
+                dispatch({ type: 'fetch_track', payload: [] });
+            }
+        }).catch((error) => {
+            alert(error.message);
+            console.error(error);
+            dispatch({ type: 'fetch_error', payload: error.message });
+        });
+
+        if (tracks.length) {
+
+            let vehicleObject = [];
+            tracks.map((arr) => {
+                const vehicles = arr.data.vehicles;
+                Object.entries(vehicles).forEach(([key, vehicle]) => {
+                    if (vehicle.plateNumber == plateNumber) {
+                        vehicleObject.push({ usersId: arr.usersId, key, ...vehicle });
+
+                    }
+                })
+            });
+
+            if (vehicleObject.length) {
+                alert(`Vehicle with plate number ${plateNumber} already exists.`);
+            } else {
         const reference = ref(db, `tracker/${currentUser.uid}/vehicles`);
         push(reference, { _id: uuidv4(), name, type, driver, plateNumber, tracks: {}, secretNumber });
         dispatch({ type: 'createVehicle' });
         navigate("Vehicles");
+            }
+        } else {
+            setTimeout(() => { console.log('please') }, 1000);
+        }
     }
 }
 
@@ -115,9 +160,7 @@ export const fetchVehicles = () => {
             const vehiclesArr = [];
 
             await get(reference).then((snapshot) => {
-                console.log('On fetch first 1');
                 if (snapshot.exists()) {
-                    console.log('On fetch first 2', snapshot.val());
                     snapshot.forEach((childSnapShot) => {
                         vehiclesArr.push({
                             vehicleKey: childSnapShot.key,
@@ -126,11 +169,9 @@ export const fetchVehicles = () => {
                         dispatch({ type: 'fetch_vehicles', payload: vehiclesArr });
                     })
                     if (!vehiclesArr.length) {
-                        console.log('On fetch first 3');
                         setTimeout(navigate("Vehicles"), 500);
                     }
                 } else {
-                    console.log("No data available");
                     dispatch({type: 'no_vehicles', payload: 'no_vehicles'})
                     dispatch({ type: 'fetch_vehicles', payload: [] });
                 }
@@ -158,7 +199,6 @@ export const createTrack = (title, plateNumber, secretNumber) => {
             let tracks = [];
             await get(referenceTracks).then((snapshot) => {
                 if (snapshot.exists()) {
-                    console.log('On fetch first', snapshot.val());
                     snapshot.forEach((childSnapShot) => {
                         tracks.push({
                             usersId: childSnapShot.key,
@@ -175,26 +215,16 @@ export const createTrack = (title, plateNumber, secretNumber) => {
                 }
             }).catch((error) => {
                 alert(error.message);
-
                 console.error(error);
                 dispatch({ type: 'fetch_error', payload: error.message });
             });
-
-
-
-            console.log(tracks)
             if (tracks.length) {
-
-                console.log('snap', tracks[0].data.vehicles);
-                console.log('snap', tracks[0].usersId);
 
                 let vehicleObject = [];
                 tracks.map((arr) => {
                     const vehicles = arr.data.vehicles;
                     Object.entries(vehicles).forEach(([key, vehicle]) => {
                         if (vehicle.plateNumber == plateNumber && vehicle.secretNumber == secretNumber) {
-                            console.log('Found one', vehicle)
-                            console.log(arr);
                             vehicleObject.push({ usersId: arr.usersId, key, ...vehicle });
 
                         }
@@ -202,11 +232,10 @@ export const createTrack = (title, plateNumber, secretNumber) => {
                 });
 
                 if (vehicleObject.length) {
-                    console.log('filtered', vehicleObject[0]);
-                    // console.log('filtered',vehicleObject);
+                   
                     const reference = ref(db, `tracker/${vehicleObject[0].usersId}/vehicles/${vehicleObject[0].key}/tracks/`);
                     const keyRef = await push(reference, { title: title, locations: {} });
-                    console.log(keyRef);
+                    
                     const trackArray = [];
                     trackArray.push({ trackKey: keyRef.key, title, ...vehicleObject[0] });
                     dispatch({ type: 'trip_created', payload: trackArray });
@@ -257,7 +286,7 @@ export const fetchTracks = (usersId, vehicleKey) => {
 export const fetchWithQuery = () => {
     return async (dispatch) => {
         const query = await AsyncStorage.getItem('trackQuery');
-        console.log(query);
+        if (query){
         try {
             //dispatch({ type: 'loading' });
             const auth = getAuth();
@@ -267,8 +296,7 @@ export const fetchWithQuery = () => {
             const arr = [];
 
             await get(reference).then((snapshot) => {
-                if (snapshot.val().locations) {
-                    console.log(snapshot.val());
+                if (snapshot.exists()) {
                     Object.entries(snapshot.val().locations).forEach(([key, location]) => {
                         arr.push(location);
                     })
@@ -276,11 +304,12 @@ export const fetchWithQuery = () => {
                 }
             }).catch((error) => {
                 alert(error.message);
-                console.error(error);
+                console.log(error);
                 dispatch({ type: 'fetch_error', payload: error.message });
             });
         } catch (err) {
             console.error(err);
         }
+    }
     }
 };

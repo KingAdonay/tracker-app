@@ -79,7 +79,7 @@ export const fetchLocations = (vehicleKey, key) => {
 
             try {
                 onValue(reference, (snapshot) => {
-                    if (snapshot.val()) {
+                    if (snapshot.val().locations) {
                         console.log(snapshot.val())
                         let locationArr = [];
                         Object.entries(snapshot.val().locations).forEach(([key, location]) => {
@@ -91,8 +91,6 @@ export const fetchLocations = (vehicleKey, key) => {
             } catch (err) {
                 console.log(err);
             }
-
-
         } catch (err) {
             console.error(err);
         }

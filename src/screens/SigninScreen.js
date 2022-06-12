@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, StyleSheet, Text, Image } from 'react-native';
+import { View, StyleSheet, Button, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { signin, clearErrorMessage, setRole } from '../actions';
 import { NavigationEvents } from 'react-navigation';
@@ -26,7 +26,7 @@ const SigninScreen = (props) => {
         routeName="Signup"
       />
       <Spacer>
-        <Button title="Change Role" onPress={() => { setRole(trackee) }} buttonStyle={styles.button} />
+        <Button title="Change Role" onPress={() => { setRole('trackee') }} buttonStyle={styles.button} />
       </Spacer>
     </View>
   );

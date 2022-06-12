@@ -1,13 +1,14 @@
 import React, { useContext } from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, Button } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
 import { connect } from 'react-redux';
-import { signup, clearErrorMessage } from '../actions';
+import { signup, clearErrorMessage, setRole } from '../actions';
 import AuthForm from '../components/AuthForm';
 import NavLink from '../components/NavLink';
+import Spacer from '../components/Spacer';
 
 const SignupScreen = (props) => {
-  const { errorMessage, signup, clearErrorMessage, navigation } = props;
+  const { errorMessage, signup, clearErrorMessage, navigation, setRole, loading } = props;
 
   return (
     <View style={styles.container}>
@@ -18,12 +19,15 @@ const SignupScreen = (props) => {
         errorMessage={errorMessage}
         submitButtonText="Sign Up"
         onSubmit={signup}
-        //loading={loading}
+        loading={loading}
       />
       <NavLink
         routeName="Signin"
         text="Already have an account? Sign in instead!"
       />
+      <Spacer>
+        <Button title="Change Role" onPress={() => { setRole('trackee') }} buttonStyle={styles.button} />
+      </Spacer>
     </View>
   );
 };
@@ -51,10 +55,11 @@ image:{
 
 const mapStateToProps = state =>{
   return {
-    errorMessage: state.auth.errorMessage
+    errorMessage: state.auth.errorMessage,
+    loading: state.auth.loading
   }
 }
 
 export default connect(mapStateToProps, {
-  signup, clearErrorMessage
+  signup, clearErrorMessage, setRole
 })(SignupScreen);

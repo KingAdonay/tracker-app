@@ -26,7 +26,7 @@ const TrackForm = (props) => {
 
       <Spacer>
         <Spacer>
-          <Spacer>
+         
             <Text>{title}</Text>
           </Spacer>
           {recording ? (
@@ -34,8 +34,6 @@ const TrackForm = (props) => {
           ) : (
             <Button title="Start Recording" onPress={startRecording} />
           )}
-        </Spacer>
-
       </Spacer>
     </>
   );

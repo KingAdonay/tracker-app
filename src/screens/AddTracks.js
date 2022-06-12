@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, TextInput, ScrollView,ActivityIndicator } from 'react-native';
-import { Button, ListItem } from 'react-native-elements';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList,  TextInput, ScrollView,ActivityIndicator } from 'react-native';
+import { Button, ListItem, Image } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { NavigationEvents } from "react-navigation";
 import { tryLocalSignin, titleChanged, plateNumberChanged, secretNumberChanged, fetchTracks, createTrack } from '../actions';
@@ -45,7 +45,7 @@ class AddTrack extends Component {
                 <View style={styles.centeredViewcontainer}>
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
-                            <Image source={require('../../assets/logo.jpg')} style={styles.image} />
+                            <Image style={styles.image} source={require('../../assets/logo.jpg')}  />
                             <Text style={styles.text}>Add Your Trip</Text>
                             <TextInput
                                 placeholder="Trip Title"
@@ -101,7 +101,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-
         flexDirection: 'column',
         backgroundColor: 'blue',
         alignItems: 'stretch',
@@ -109,7 +108,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: 80,
-        height: 100,
+        height: 70,
         borderRadius: 30
     },
     centeredViewcontainer: {

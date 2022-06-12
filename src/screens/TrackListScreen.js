@@ -7,46 +7,54 @@ import { fetchTracks } from '../actions';
 
 
 const TrackListScreen = (props) => {
-  const {  navigation } = props;
- // const _id = navigation.getParam('_id');
+  const { navigation } = props;
+  // const _id = navigation.getParam('_id');
   const tracks = navigation.getParam('tracks') || {};
   const vehicleKey = navigation.getParam('vehicleKey') || '';
 
   console.log(tracks);
-  let arr=[];
+  let arr = [];
   Object.entries(tracks).forEach(([key, track]) => {
-    arr.push({key,track});
+    arr.push({ key, track });
   })
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}} >
-    {
-      arr.length>0?( 
-        <FlatList
-        data={arr}
-        keyExtractor={(item) => item.track._tid}
-        renderItem={({ item }) => {
-          return (
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("TrackDetail", { locations: item.track.locations, title: item.track.title, vehicleKey: vehicleKey, key:item.key })
-              }
-            >
-              <ListItem>
-                <ListItem.Content>
-                  <ListItem.Title>{item.track.title}</ListItem.Title>
-                </ListItem.Content>
-                <ListItem.Chevron />
-              </ListItem>
-            </TouchableOpacity>
-          );
-        }}
-      />
-      ):(<View style={styles.noDataContainer}>
-        <Text style={styles.text}>No trips available! </Text>
-      </View>)
-    }
-     
+    <View style={{ flex: 1, backgroundColor: 'white' }} >
+      {
+        arr.length > 0 ? (
+          <FlatList
+            data={arr}
+            keyExtractor={(item) => item.track._tid}
+            renderItem={({ item }) => {
+              return (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("TrackDetail", { locations: item.track.locations, title: item.track.title, vehicleKey: vehicleKey, key: item.key })
+                  }
+                >
+                  <ListItem style={{
+                    marginTop: 10, marginHorizontal: 5,
+                    borderBottomWidth: 2,
+                    borderBottomColor: 'rgba(213, 237, 255, 0.8)',
+                    borderRadius: 2
+                  }}>
+                    <ListItem.Content>
+                      <ListItem.Title style={{
+                        fontWeight: '500',
+                        fontSize: 18
+                      }}>{item.track.title}</ListItem.Title>
+                    </ListItem.Content>
+                    <ListItem.Chevron />
+                  </ListItem>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        ) : (<View style={styles.noDataContainer}>
+          <Text style={styles.text}>No trips available! </Text>
+        </View>)
+      }
+
     </View>
   );
 };
@@ -61,7 +69,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center'
   },
-  text:{
+  text: {
     marginTop: 10,
     fontSize: 20,
     fontWeight: 'bold',
@@ -69,10 +77,10 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = state =>{
-  return{
+const mapStateToProps = state => {
+  return {
     vehicles: state.track.vehicles
   }
 }
 
-export default connect(mapStateToProps, {fetchTracks})(TrackListScreen) ;
+export default connect(mapStateToProps, { fetchTracks })(TrackListScreen);

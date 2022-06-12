@@ -10,7 +10,7 @@ const AuthForm = ({ headerText, errorMessage, onSubmit, submitButtonText, loadin
   return (
     <>
       <Spacer>
-        <Text  h3>{headerText}</Text>
+        <Text h3>{headerText}</Text>
       </Spacer>
       <Input
         label="Email"
@@ -36,10 +36,17 @@ const AuthForm = ({ headerText, errorMessage, onSubmit, submitButtonText, loadin
         <Text style={styles.errorMessage}>{errorMessage}</Text>
       ) : null}
       <Spacer>
-        <Button
-          title={submitButtonText}
-          onPress={() => onSubmit({ email, password })}
-        />
+        {
+          loading ? (
+            <ActivityIndicator size={'small'} />
+          ) : (
+            <Button
+              title={submitButtonText}
+              onPress={() => onSubmit({ email, password })}
+            />
+          )
+        }
+
       </Spacer>
 
       {
@@ -65,11 +72,11 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     color: 'black',
-  }, 
-  input:{
-    width:200
   },
-  
+  input: {
+    width: 200
+  },
+
 });
 
 export default AuthForm;

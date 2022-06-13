@@ -9,13 +9,11 @@ import { getPreciseDistance } from 'geolib';
 
 class RecentTrip extends Component {
 
-
     render() {
         const { locations, navigation } = this.props;
 
         let initialCoords;
         let topSpeed;
-
         let locationsLocal;
         let distance;
         let averageSpeed;
@@ -23,7 +21,8 @@ class RecentTrip extends Component {
         if (locations.length > 0) {
             locationsLocal = locations;
             initialCoords = locations[0].coords;
-            topSpeed = locationsLocal.reduce((prev, current) => (prev.coords.speed > current.coords.speed) ? prev : current)
+            topSpeed = locationsLocal.reduce((prev, current) => (prev.coords.speed > current.coords.speed) ? prev : current);
+            
             let sum = 0;
             locationsLocal.map(loc => {
                 sum += loc.coords.speed;
@@ -61,7 +60,7 @@ class RecentTrip extends Component {
             }];
             initialCoords = locationsLocal[0].coords;
 
-            topSpeed = locationsLocal.reduce((prev, current) => (prev.coords.speed > current.coords.speed) ? prev : current)
+            topSpeed = locationsLocal.reduce((prev, current) => (prev.coords.speed > current.coords.speed) ? prev : current);
             let sum = 0;
             locationsLocal.map(loc => {
                 sum += loc.coords.speed;
@@ -92,7 +91,7 @@ class RecentTrip extends Component {
                             >
                                 <Polyline coordinates={locationsLocal.map(loc => loc.coords)}
                                     strokeColor="rgba(24, 173, 24, 0.8)" // fallback for when `strokeColors` is not supported by the map-provider
-                                    
+
                                     strokeWidth={6}
                                 />
                                 <Marker coordinate={locationsLocal[0].coords} pinColor="green" />
@@ -100,16 +99,9 @@ class RecentTrip extends Component {
                             </MapView>
                             <ScrollView contentContainerStyle={styles.detailsContainer}>
                                 {/* <Text style={{ fontSize: 30, textAlign: 'center', marginVertical: 10, fontWeight: 'bold' }}>{locationsLocal.title}</Text> */}
-
-                                {
-                                    topSpeed<30?(
-                                        <Text style={styles.speedNormal}>Top speed: {topSpeed > 0 ? topSpeed.toFixed(3) : 0}km/hr</Text>
-                                    ): (
-                                        <Text style={styles.speedWarning}>Top speed: {topSpeed > 0 ? topSpeed.toFixed(3) : 0}km/hr</Text>
-                                    )
-                                }
-                                <Text style={{ fontSize: 20, marginBottom: 5 }}>AverageSpeed: {averageSpeed > 0 ? averageSpeed.toFixed(3) : 0} km/hr</Text>
-                                <Text style={{ fontSize: 20, marginBottom: 5 }}>Estimated Distance: {distance} KM</Text>
+                                <Text style={[(topSpeed.coords.speed > '1') ? styles.speedWarning : styles.speedNormal, { fontSize: 20, marginBottom: 5 }]}>Top speed: {topSpeed.coords.speed >= 0 ? topSpeed.coords.speed.toFixed(3) : 0}km/hr</Text>
+                                <Text style={[(averageSpeed >= '1') ? styles.speedWarning : styles.speedNormal, { fontSize: 20, marginBottom: 5 }]}>AverageSpeed: {averageSpeed > 0 ? averageSpeed.toFixed(3) : 0} km/hr</Text>
+                                <Text style={{ fontSize: 20, marginBottom: 5 }}>Estimated Distance: {distance.toFixed(3)} M</Text>
                             </ScrollView>
                         </View>
                     ) : (
@@ -148,9 +140,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         textAlign: 'center',
         marginTop: 20
-    }, 
-    speedNormal: { fontSize: 20, marginBottom: 5, color:'black' },
-    speedWarning:  { fontSize: 20, marginBottom: 5, color:'orange' }
+    },
+    speedNormal: {
+        fontSize: 20,
+        marginBottom: 5,
+        color: 'black'
+    },
+    speedWarning: {
+        fontSize: 20,
+        marginBottom: 5,
+        color: 'orange'
+    }
 });
 
 const mapStateToProps = state => {

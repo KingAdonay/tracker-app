@@ -89,9 +89,8 @@ class TrackDetailScreen extends Component {
               </MapView>
               <ScrollView>
                 <Text style={{ fontSize: 30, textAlign: 'center', marginVertical: 10, fontWeight: 'bold' }}>{title}</Text>
-
-                <Text style={{ fontSize: 20, marginBottom: 5 }}>Top speed: {topSpeed > 0 ? topSpeed.toFixed(3) : 0}km/hr</Text>
-                <Text style={{ fontSize: 20, marginBottom: 5 }}>AverageSpeed: {averageSpeed > 0 ? averageSpeed.toFixed(3) : 0} km/hr</Text>
+                 <Text style={[(topSpeed.coords.speed > '1') ? styles.speedWarning : styles.speedNormal, { fontSize: 20, marginBottom: 5 }]}>Top speed: {topSpeed.coords.speed >= 0 ? topSpeed.coords.speed.toFixed(3) : 0}km/hr</Text>
+                 <Text style={[(averageSpeed >= '1') ? styles.speedWarning : styles.speedNormal, { fontSize: 20, marginBottom: 5 }]}>AverageSpeed: {averageSpeed > 0 ? averageSpeed.toFixed(3) : 0} km/hr</Text>
                 <Text style={{ fontSize: 20, marginBottom: 5 }}>Estimated Distance: {distance} KM</Text>
               </ScrollView>
             </>
@@ -109,7 +108,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white'
-  }
+  },
+   speedNormal: {
+        fontSize: 20,
+        marginBottom: 5,
+        color: 'black'
+    },
+    speedWarning: {
+        fontSize: 20,
+        marginBottom: 5,
+        color: 'orange'
+    }
 });
 
 const mapStateToProps = state => {

@@ -24,7 +24,6 @@ const TrackForm = (props) => {
   return (
     <>
       <Spacer>
-            <Text>{title}</Text>
           {recording ? (
             <Button title="Stop" onPress={stopRecording} />
           ) : (
